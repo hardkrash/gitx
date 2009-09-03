@@ -11,6 +11,7 @@
 #import "PBGitGrapher.h"
 #import "PBGitRevisionCell.h"
 #import "PBCommitList.h"
+#import "NSString_RelDateSort.h"
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
 
 
@@ -39,6 +40,17 @@
 	// Set a sort descriptor for the subject column in the history list, as
 	// It can't be sorted by default (because it's bound to a PBGitCommit)
 	[[commitList tableColumnWithIdentifier:@"subject"] setSortDescriptorPrototype:[[NSSortDescriptor alloc] initWithKey:@"subject" ascending:YES]];
+#ifndef NormalDate
+	if ( nil == [ commitList tableColumns ] )
+//	if ( nil == [commitList tableColumnWithIdentifier:@"date"] )
+	{
+		abort();
+	}
+	[[commitList tableColumnWithIdentifier:@"date"] setSortDescriptorPrototype:[[NSSortDescriptor alloc]
+							   initWithKey:@"date"
+								 ascending:YES 
+								  selector:@selector(compareRelativeDate:) ]];
+#endif
 	// Add a menu that allows a user to select which columns to view
 	[[commitList headerView] setMenu:[self tableColumnMenu]];
 	[historySplitView setTopMin:33.0 andBottomMin:100.0];
