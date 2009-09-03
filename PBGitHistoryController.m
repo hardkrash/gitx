@@ -329,7 +329,7 @@
 }
 
 - (CGFloat)splitView:(NSSplitView *)sender constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)offset {
-	if(offset = 1)
+	if(offset == 1)
 		return proposedMax - historySplitView.bottomViewMin;
 	return [sender frame].size.height;
 }
