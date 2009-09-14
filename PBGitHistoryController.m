@@ -12,6 +12,7 @@
 #import "PBGitRevisionCell.h"
 #import "PBCommitList.h"
 #import "NSString_RelDateSort.h"
+#import "PBGitSidebarController.h"
 #define QLPreviewPanel NSClassFromString(@"QLPreviewPanel")
 
 
@@ -29,6 +30,19 @@
 	[commitList setIntercellSpacing:cellSpacing];
 	[fileBrowser setTarget:self];
 	[fileBrowser setDoubleAction:@selector(openSelectedFile:)];
+
+	[historySplitView removeFromSuperview];
+	NSSplitView *newView = [[NSSplitView alloc] initWithFrame:[historySplitView frame]];
+	
+	sidebarController = [[PBGitSidebarController alloc] initWithRepository:repository superController:superController];
+	[newView setDividerStyle:NSSplitViewDividerStyleThin];
+	[newView addSubview:[sidebarController view]];
+	[newView addSubview:historySplitView];
+	[newView setVertical:YES];
+	[newView adjustSubviews];
+	[newView setAutoresizingMask: NSViewWidthSizable | NSViewHeightSizable];
+
+	[[self view] addSubview:newView];
 
 	if (!repository.currentBranch) {
 		[repository reloadRefs];
